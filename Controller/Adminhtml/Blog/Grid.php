@@ -19,8 +19,7 @@ class Grid extends \Magento\Backend\App\Action
 	{
 		$resultPage = $this->resultPageFactory->create();
 		$resultPage->getConfig()->getTitle()->prepend((__('Manage Blogs')));
-		return $resultPage;
+		$this->_view->loadLayout();
+        $this->_view->renderLayout();
 	}
-
-
 }

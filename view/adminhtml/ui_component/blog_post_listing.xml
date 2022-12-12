@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+
+    <!-- main part of the grid -->
+    <argument name="data" xsi:type="array">
+        <!-- define where to find the date source -->
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">blog_post_listing.blog_post_listing_data_source</item>
+            <item name="deps" xsi:type="string">blog_post_listing.blog_post_listing_data_source</item>
+        </item>
+        <!-- define where to find the columns -->
+        <item name="spinner" xsi:type="string">blog_post_columns</item>
+
+        <item name="buttons" xsi:type="array">
+            <item name="add" xsi:type="array">
+                <item name="name" xsi:type="string">add</item>
+                <item name="label" xsi:type="string" translate="true">Create New Post</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="url" xsi:type="string">*/*/add</item>
+            </item>
+        </item>
+    </argument>
+
+    <!-- define the date source (must be the same than in argument/item/provider and argument/js_config/deps -->
+    <dataSource name="blog_post_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <!-- unique name for the grid -->
+            <argument name="class" xsi:type="string">BlogPostGridDataProvider</argument>
+            <!-- name of the data source same as in argument/js_config/provider -->
+            <argument name="name" xsi:type="string">blog_post_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+
+    <container name="listing_top">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="template" xsi:type="string">ui/grid/toolbar</item>
+            </item>
+        </argument>
+
+        <!-- we put the others elements here -->
+
+        <!-- Columns Controll -->
+        <container name="columns_controls">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="columnsData" xsi:type="array">
+                        <item name="provider" xsi:type="string">blog_post_listing.blog_post_listing.blog_post_columns</item>
+                    </item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/controls/columns</item>
+                    <item name="displayArea" xsi:type="string">dataGridActions</item>
+                </item>
+            </argument>
+        </container>
+
+        <bookmark name="bookmarks">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/controls/bookmarks/bookmarks</item>
+                    <item name="displayArea" xsi:type="string">dataGridActions</item>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="saveUrl" xsi:type="url" path="*/*/save"/>
+                        <item name="deleteUrl" xsi:type="url" path="*/*/delete"/>
+                        <item name="namespace" xsi:type="string">blog_post_listing</item>
+                    </item>
+                </item>
+            </argument>
+        </bookmark>
+
+        <paging name="listing_paging">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="storageConfig" xsi:type="array">
+                        <!-- we put here the path to the bookmarks element -->
+                        <item name="provider" xsi:type="string">blog_post_listing.blog_post_listing.listing_top.bookmarks</item>
+                        <item name="namespace" xsi:type="string">current.paging</item>
+                    </item>
+                    <!-- we put here the path to the element id of blog_post_columns  element -->
+                    <item name="selectProvider" xsi:type="string">blog_post_listing.blog_post_listing.blog_post_columns.id</item>
+                    <item name="displayArea" xsi:type="string">bottom</item>
+                </item>
+            </argument>
+        </paging>
+
+        <!-- <filters name="listing_filters">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="provider" xsi:type="string">blog_post_listing.blog_post_listing.listing_top.bookmarks</item>
+                        <item name="namespace" xsi:type="string">curren.filters</item>
+                    </item>
+                    <item name="childDefaults" xsi:type="array">
+                        <item name="provider" xsi:type="string">blog_post_listing.blog_post_listing.listing_top.listing_filters</item>
+                        <item name="imports" xsi:type="array">
+                            <item name="visible" xsi:type="string">blog_post_listing.blog_post_listing.listing_top.bookmarks:current.columns.${ $.index }.visible</item>
+                        </item>
+                    </item>
+                </item>
+            </argument>
+        </filters> -->
+
+        <massaction name="listing_massaction">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <!-- we put here the path to the element pfay_contact_ids of contacts_test_columns  element -->
+                    <item name="selectProvider" xsi:type="string">blog_post_listing.blog_post_listing.blog_post_columns.ids</item>
+                    <item name="displayArea" xsi:type="string">bottom</item>
+                    <item name="indexField" xsi:type="string">id</item>
+                </item>
+            </argument>
+            <action name="delete">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">delete</item>
+                        <item name="label" xsi:type="string" translate="true">Delete Selected</item>
+                        <item name="url" xsi:type="url" path="*/*/massDelete"/>
+                        <item name="confirm" xsi:type="array">
+                            <item name="title" xsi:type="string" translate="true">Delete all selected posts</item>
+                            <item name="message" xsi:type="string" translate="true">Do you want to delete all the selected contacts?</item>
+                        </item>
+                    </item>
+                </argument>
+            </action>
+        </massaction>
+
+
+    </container>
+
+    <!-- define the columns of my grid -->
+    <columns name="blog_post_columns">
+
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <!-- Bookmarks behaviour -->
+                <item name="storageConfig" xsi:type="array">
+                    <item name="provider" xsi:type="string">blog_post_listing.blog_post_listing.listing_top.bookmarks</item>
+                    <item name="namespace" xsi:type="string">current</item>
+                </item>
+                <item name="childDefaults" xsi:type="array">
+                    <item name="controlVisibility" xsi:type="boolean">true</item>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="provider" xsi:type="string">blog_post_listing.blog_post_listing.listing_top.bookmarks</item>
+                        <item name="root" xsi:type="string">columns.${ $.index }</item>
+                        <item name="namespace" xsi:type="string">current.${ $.storageConfig.root}</item>
+                    </item>
+                </item>
+            </item>
+        </argument>
+
+        <selectionsColumn name="ids">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <!-- define which field will be used as ID -->
+                    <item name="indexField" xsi:type="string">id</item>
+                </item>
+            </argument>
+        </selectionsColumn>
+
+        <!-- Column ID -->
+        <column name="id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">textRange</item>
+                    <item name="sorting" xsi:type="string">asc</item>
+                    <item name="label" xsi:type="string" translate="true">ID</item>
+                </item>
+            </argument>
+        </column>
+        <!-- Column name -->
+        <column name="blog_pic">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">image</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">contact</item>
+                    <item name="dataScope" xsi:type="string">blog_pic</item>
+                    <item name="label" xsi:type="string" translate="true">Image</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </column>
+        <!-- <column name="name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">contact</item>
+                    <item name="dataScope" xsi:type="string">name</item>
+                    <item name="label" xsi:type="string" translate="true">Name</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </column> -->
+
+        <column name="subject">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">contact</item>
+                    <item name="dataScope" xsi:type="string">subject</item>
+                    <item name="label" xsi:type="string" translate="true">Subject</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </column>
+
+        <column name="category_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">contact</item>
+                    <item name="dataScope" xsi:type="string">category_id</item>
+                    <item name="label" xsi:type="string" translate="true">Category Id</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </column>
+
+        <column name="blog_status">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">contact</item>
+                    <item name="dataScope" xsi:type="string">blog_status</item>
+                    <item name="label" xsi:type="string" translate="true">Status</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </column>
+
+        <column name="created_at">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">date</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">contact</item>
+                    <item name="dataScope" xsi:type="string">created_at</item>
+                    <item name="label" xsi:type="string" translate="true">Created At</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </column>
+
+        <column name="content">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">date</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">contact</item>
+                    <item name="dataScope" xsi:type="string">content</item>
+                    <item name="label" xsi:type="string" translate="true">Content</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </column>
+
+        <!-- action columns edit and delete -->
+        <actionsColumn name="actions" class="Webkul\Blog\Ui\Component\Listing\Column\ContactsActions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="resizeEnabled" xsi:type="boolean">false</item>
+                    <item name="resizeDefaultWidth" xsi:type="string">107</item>
+                    <item name="indexField" xsi:type="string">id</item>
+                </item>
+            </argument>
+        </actionsColumn>
+    </columns>
+
+</listing>
