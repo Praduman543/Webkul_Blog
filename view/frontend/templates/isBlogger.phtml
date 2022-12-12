@@ -1,0 +1,30 @@
+<!-- 
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_Blog
+ * @author      Webkul
+ * @copyright   Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */ -->
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$isLoggedIn = $objectManager->create(\Webkul\Blog\Helper\Data::class)->isCustomerBlogger();
+$customerData = $objectManager->create(\Webkul\Blog\Helper\Data::class)->getLoggedInCustomerData();
+$name = $customerData->getFirstname();
+$email = $customerData->getEmail();
+$customerId = $customerData->getId();
+if (!($isLoggedIn)) {?>
+    <li class='nav item'>   
+        <a 
+        href='<?= /* @noEscape */ $block->escapeHtml($block->getUrl()); ?>wkblog/customer/addblogger/userid/
+        <?= /* @noEscape */  $block->escapeHtml($customerId);?>/name/
+        <?= /* @noEscape */  $block->escapeHtml($name);?>/email/<?= /* @noEscape */  $block->escapeHtml($email);?>' 
+        role='button' class='btn' >
+         <?= /* @noEscape */  __('Subscribe For Blogs');?> 
+        </a>
+    </li> 
+    <?php
+}
+?>

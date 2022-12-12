@@ -1,0 +1,103 @@
+<!-- 
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_Blog
+ * @author      Webkul
+ * @copyright   Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */ -->
+<?php
+$customerId =$block->getcustomerId();
+$collection = $block->getBlogByTag();
+$limit = $block->getHelper()->getCharacterLimit();
+$tagName = $block->getTagName();
+$collectionSize = $collection->getSize();
+?>
+<?php if ($collectionSize): ?>
+    <?php foreach ($collection as $blog): ?>
+        <?php $name=$blog->getCustomerName(); ?>
+    <?php endforeach; ?>
+    <h4 class='WK_textcolor wk-heading'><?= /* @noEscape */ $tagName; ?></h4>
+    <div class = 'container'>
+        <?php foreach ($collection as $blog): ?>
+            <div class='wk-blog-block'>
+                <h2 class='WK_textcolor'> 
+                <?php
+                    $blogUrl = $block->getUrl().'wkblog/blog/title/blogid/'.$blog->getId();
+                ?>
+                <a href='<?= /* @noEscape */ $block->escapeUrl($blogUrl);?>'
+                 role='button' class='btn'>
+                 <div class='title'><?= /* @noEscape */  $block->escapeHtml($blog->getSubject());?></div>
+                 </a></h2>
+                <p class ='post-meta tags' style='margin-top:20px;'>
+                    <span class='date'><?= /* @noEscape */ $block->escapeHtml($blog->getCreatedAt());  ?> 
+                    </span>
+                    <?php $blogUrl = $block->getUrl().'wkblog/blog/user/userid/'.$blog->getUserId();?>
+                    <a href='<?= /* @noEscape */  $block->escapeUrl($blogUrl);?>' role='button' class='btn'>
+                    <span class='author'><?= /* @noEscape */ $block->escapeHtml($blog->getCustomerName()); ?></span></a>
+                    <?php if ($blog->getCategory() != ""): ?>
+                        <?php if ($blog->getStatus() != 0): ?>
+                            <?php
+                            $catUrl = $block->getUrl().'wkblog/category/category/categoryid/'.$blog->getCategoryId();
+                            ?>
+                            <a href='<?= /* @noEscape */  $block->escapeUrl($catUrl);?>' 
+                            role='button' class='btn'>
+                            <span class='cats'><?= /* @noEscape */ $block->escapeHtml($blog->getCategory())?></span></a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </p>                
+                <?php if (strlen($blog->getContent()) > $limit): ?>
+                    <?php $content = substr($blog->getContent(), 0, $limit)."..."; ?>
+                <?php else: ?>
+                    <?php $content = $blog->getContent(); ?>
+                <?php endif; ?>
+                <?= /* @noEscape */  "<div class='WK_tbodyingedit_content'>".$content."</div>"; ?>
+                <p class='tags'>
+                    <span class='tag'>
+                        <?php $tags = $blog->getTag();
+                        $tagsArray = explode(',', $tags);
+                        if ($tagsArray[1] != null) {
+                            $totalTag = count($tagsArray);
+                        } else {
+                            $totalTag = 1;
+                        }
+                        $i = 1;
+                        foreach ($tagsArray as $tag):
+                            $seperator = '';
+                            ?>
+                            <?php if ($tag != ""):
+                                if ($totalTag != $i) {
+                                    $seperator = ',';
+                                }
+                                $tagUrl = $block->getUrl().'wkblog/blog/tag/tag/'.$tag;?>
+                                <a 
+                                    href='<?= /* @noEscape */  $block->escapeHtml($tagUrl);?>' 
+                                    role='button' class='btn'>
+                                    <span class='tag'>
+                                        <?= /* @noEscape */  $block->escapeHtml($tag);?>
+                                        <?= /* @noEscape */  $seperator;?>
+                                    </span>
+                                </a>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </span>
+                </p>
+                <hr>
+            </div>  
+        <?php endforeach; ?>
+        <?php if ($block->getPagerHtml()): ?>
+            <div class="order-products-toolbar toolbar bottom"><?= /* @noEscape */  $block->getPagerHtml(); ?></div>
+        <?php endif; ?>
+        <div class='wk-footer'>
+            <div class="buttons-set">
+                <p class="back-link">
+                    <a class="left" onclick="javascript: window.history.back();" href="javascript:;">« Back</a>
+                </p>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <?= /* @noEscape */  "<div class='WK_textcolor'> No Post Exist! </div>"; ?>
+<?php endif; ?>     

@@ -1,0 +1,134 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_Blog
+ * @author      Webkul
+ * @copyright   Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+ $customerId = $block-> getcustomerId();
+ $limit = $block->getHelper()->getCharacterLimit();
+ $collection = $block->getBlogCollection();
+ $collectionSize = $collection->getSize(); ?>
+<div class='wk-big'>
+    <div class='section group'>
+        <?php if ($collectionSize) { ?>
+            <?php $i = 0; ?>
+            <?php foreach ($collection as $blog) {
+            if ($i <= 3){
+               ?>
+            <div class='wk-blog-block col span_1_of_3'>
+                <img class="img-blog-home" src="<?= /* @noEscape */  $block->getUrl("media/wysiwyg/blog/").$blog->getBlogPic();?>">
+                <h2 class='WK_textcolor'>
+                        <a 
+                        href='<?= /* @noEscape */ $block->escapeHtml($block->getUrl()); ?>wkblog/blog/title/blogid/
+                        <?= /* @noEscape */ $block->escapeHtml($blog->getId());?>'
+                        role='button'>
+                            <div class='title blog-title'><?= /* @noEscape */  $block->escapeHtml($blog->getSubject());?></div>
+                        </a>
+                    </h2>
+                </div>
+            <?php } $i++; } ?>
+        <?php } ?>
+        <div class='wk-footer' style="text-align: center;">
+            <div class="buttons-set">
+                <p class="back-link">
+                <a href='<?= /* @noEscape */ $block->escapeHtml($block->getUrl()); ?>wkblog/blog/viewpost/
+                        'role='button' class='btn-blog'>Visit our blog</a>
+                </p>
+            </div> 
+        </div>
+    </div>  
+</div>
+<style>
+    /* image */
+    .img-blog-home{
+    width: 280px;
+    height:190px;
+}
+/*  SECTIONS  */
+.section {
+	clear: both;
+	padding: 0px;
+    margin: 0 4.5% 0 5%
+}
+
+/*  COLUMN SETUP  */
+.col {
+	display: block;
+	float:left;
+    padding-left :0px;
+    padding-right:0px;
+	margin: 1% 0 2% 1.6%;
+    background-color: #fff;
+  /* box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12); */
+}
+.col:first-child { margin-left: 0; }
+
+.col .body {
+    padding: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+/*  GROUPING  */
+.group:before,
+.group:after {
+	content:"";
+	display:table;
+}
+.group:after {
+	clear:both;
+}
+.group {
+    zoom:1; /* For IE 6/7 */
+}
+
+/*  GRID OF THREE  */
+.span_3_of_3 {
+	width: 100%;
+}
+.span_2_of_3 {
+	width: 66.1%;
+}
+.span_1_of_3 {
+	width: 23.6%;
+}
+a.btn-blog {
+    color: #5ABD76;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: underline;
+}
+/*  GO FULL WIDTH AT LESS THAN 480 PIXELS */
+
+@media only screen and (max-width: 480px) {
+	.col { margin: 1% 0 1% 0%;}
+	.span_3_of_3, .span_2_of_3, .span_1_of_3 { width: 100%; }
+}
+@media (min-width: 769px), print {
+.wkblog-blog-viewpost .page-title-wrapper {
+    margin-left: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;}
+}
+.title.blog-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: black;
+    padding-top: 12px;
+    text-align: justify;
+    padding-left: 10px;
+    max-width: 195px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 10px;
+}
+
+</style>

@@ -1,0 +1,167 @@
+<!-- 
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_Blog
+ * @author      Webkul
+ * @copyright   Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */ -->
+<?php
+$categories = $block->getCategories();
+$blogDetails = $block->getEditPostData();
+
+$blogHelper = $block->getHelper();
+$isLoggedIn = $blogHelper->getCustomerLoginInfo();
+$isBlogger = $blogHelper->isCustomerBlogger();
+if ($isLoggedIn):
+    ?>
+    <?php if ($isBlogger): ?>
+        <form class="addPostForm" data-mage-init='{"validation":{}}' 
+            action="<?= /* @noEscape */  $block->escapeHtml($block->getUrl('wkblog/blog/save'))?>"
+            method="POST" enctype="multipart/form-data" id="custom-form" 
+            data-hasrequired="<?= /* @noEscape */  $block->escapeHtml(__('* Required Fields')) ?>"
+        >
+            <div class='wk-blog-manager' id = 'wk-blog-manager'>
+                
+                <fieldset class="fieldset info wk-blog-fieldset">
+                    <input type="hidden" id='blogid' name='blogid' 
+                    value='<?= /* @noEscape */ $block->escapeHtml($blogDetails['id'] ?? ""); ?>'>
+                    
+                    <div class="field required">
+                        <label class="label"><?= /* @noEscape */  $block->escapeHtml(__('Category')) ?>:</label>
+                        <div class="control">
+                            <select class="required-entry" name="category_id" form="custom-form" id='wk-select'>
+                                <?php
+                                foreach ($categories as $category) {
+                                    if (isset($blogDetails['category_id']) &&
+                                        $category->getId() == $blogDetails['category_id']) {?>
+                                        <option 
+                                        value='<?= /* @noEscape */  $block->escapeHtml($category->getId()); ?>'
+                                        selected><?= /* @noEscape */ $block->escapeHtml($category->getCategory()); ?>
+                                        </option>
+                                        <?php
+                                    } else {?>
+                                        <option 
+                                            value='<?= /* @noEscape */  $block->escapeHtml($category->getId()); ?>'>
+                                            <?= /* @noEscape */  $block->escapeHtml($category->getCategory()); ?>
+                                        </option>
+                                        <?php
+                                    }
+                                }
+
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */  $block->escapeHtml(__('Title')) ?>:</label>
+                <div class="control">
+                    <input type="text" class=' required-entry input-text' name="subject" id="subject"
+                    value="<?= /* @noEscape */ $blogDetails['subject'] ??  "" ?>">
+                </div>
+            </div>
+    <div class="field required">
+        <label class="label"><?= /* @noEscape */  $block->escapeHtml(__('Meta Keywords')) ?>:</label>
+<div class="control">
+    <textarea class='required-entry input-text' name='metakeywords'  
+    value="<?= /* @noEscape */ $blogDetails['metakeywords'] ?? "" ?>" 
+    id='metakeywords'><?= /* @noEscape */ $blogDetails['metakeywords'] ?? "" ?></textarea>
+</div>
+    </div>
+    <div class="field required">
+        <label class="label">
+            <?= /* @noEscape */  $block->escapeHtml(__('Preview Description')) ?>:
+        </label>
+        <div class="control">
+        <textarea class='required-entry input-text validate-no-html-tags' name='preview'
+        value="<?= /* @noEscape */ $blogDetails['preview'] ??  "" ?>"
+        id='preview'><?= /* @noEscape */$blogDetails['preview'] ??  "" ?></textarea>
+        </div>
+    </div>
+    <div class="field required">
+        <label class="label">
+            <?= /* @noEscape */  $block->escapeHtml(__('Meta Description')) ?>:
+        </label>
+        <div class="control">
+            <textarea class='required-entry input-text' name='metadescription' 
+            id='metadescription'><?= /* @noEscape */ $blogDetails['metadescription'] ??  "" ?></textarea>
+        </div>
+    </div>
+    <div class="field required">
+        <label class="label"><?= /* @noEscape */  $block->escapeHtml(__('Content')) ?>:</label>
+            <div class="control wk-border-box-sizing">
+            <textarea name="content" class="input-text compdesi" id="description">
+                    <?= /* @noEscape */ $blogDetails['content'] ??  "" ?>
+            </textarea>
+            <?php // @codingStandardsIgnoreStart ?>
+            <script>
+               require([
+                "jquery", 
+                "mage/translate", 
+                "mage/adminhtml/events", 
+                "mage/adminhtml/wysiwyg/tiny_mce/setup"
+                ], function(jQuery){
+                    wysiwygDescription = new wysiwygSetup("description", {
+                        "width":"100%",
+                        "height":"200px",
+                        "plugins":[{"name":"image"}],
+                        "tinymce4":{"toolbar":"formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link table charmap",
+                        "plugins":"advlist autolink lists link charmap media noneditable table contextmenu paste code help table",
+                        }
+                    });
+                    wysiwygDescription.setup("exact");
+                });
+            </script>
+            <?php // @codingStandardsIgnoreStart ?>
+            </div>
+    </div>
+    <div class="field required">
+        <label class="label"><?= /* @noEscape */  $block->escapeHtml(__('Tag')) ?>:</label>
+            <div class="control">
+                <input type="text" class="required-entry input-text" name='tag'
+                value="<?= /* @noEscape */ (isset($blogDetails['tag']) ? $blogDetails['tag'] : ""); ?>" >
+            </div>
+    </div>
+    <div class="field required">
+        <label class="label"><?= /* @noEscape */  $block->escapeHtml(__('Blog Image')) ?>:</label>
+            <div class="control">
+            <input type="file" id="blog-pic" alt="no image" name="blog_pic" value="<?= /* @noEscape */  $block->getUrl("media/wysiwyg/blog/");?>"/>
+            </div>
+            <?php  if (isset($blogDetails['blog_pic'])) { ?>
+            <img src="<?= /* @noEscape */  $block->getUrl("media/wysiwyg/blog/").$blogDetails['blog_pic'];?>">
+            <?php } ?>
+    </div>
+       <div class='wk-save-button'>
+            <button class="button" ><?= /* @noEscape */  $block->escapeHtml(__("SAVE"));?></button>
+                    </div>
+                </fieldset>
+            </div>   
+            <div class="buttons-set">
+                <p class="back-link">
+                    <a class="left" onclick="javascript: window.history.back();" href="javascript:;">« Back</a>
+                </p>
+            </div>        
+        </form>
+    <?php else:?>
+    <div class='WK_textcolor'> 
+        <?= /* @noEscape */  $block->escapeHtml(__('YOU ARE NOT SUBSCRIBED TO BLOGS')); ?>
+    </div>
+    <?php endif; ?>
+
+<?php endif;
+
+$optionElements = [
+    'descriptionId' => '#description',
+    'saveutton' => '.wk-save-button'
+];
+$serializedData = $block->getJsonHelper()->jsonEncode($optionElements);
+?>
+<script type="text/x-magento-init">
+{
+"*":{
+        "contentValidate":<?= /* @noEscape */ $serializedData; ?>
+    }
+}
+</script>

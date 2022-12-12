@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Blog
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="wk_blog" resource="default" engine="innodb" comment="Blog Table">
+        <column xsi:type="int" name="id" padding="6" unsigned="true" nullable="false" identity="true" comment="entity_id ID"/>
+        <column xsi:type="int" name="category_id" nullable="false"  comment="Category ID"/>
+        <column xsi:type="int" name="user_id" nullable="false"  comment="Category ID"/>
+        <column xsi:type="varchar" name="customer_name" length="255"  comment="Customer Name"/>
+        <column xsi:type="varchar" name="customer_email" length="255"  comment="Customer Email"/>
+        <column xsi:type="varchar" name="subject" length="255" comment="Subject"/>
+        <column xsi:type="text" name="content"  comment="content"/>
+        <column xsi:type="text" name="preview"  comment="preview"/>
+        <column xsi:type="varchar" name="metadescription" length="255"  comment="metadescription"/>
+        <column xsi:type="varchar" name="metakeywords" length="255"  comment="metakeywords"/>
+        <column xsi:type="varchar" name="tag" length="255"  comment="tag"/>
+        <column xsi:type="int"  name="blog_status" default="0"  nullable="false"  comment="blog_status"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false"  comment="Created At"/>
+        <column xsi:type="text" name="blog_pic"  comment="Blog image"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    
+    <table name="wk_category" resource="default" engine="innodb" comment="Blog Category Table">
+        <column xsi:type="int" name="id" padding="6" unsigned="true" nullable="false" identity="true" comment="entity_id ID"/>
+        <column xsi:type="varchar" name="category" length="255"  comment="category Name"/>
+        <column xsi:type="int"  name="status" default="0"  nullable="false"  comment="status"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false"  comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    
+    <table name="wk_postcomment" resource="default" engine="innodb" comment="Blog Post Comment Table">
+        <column xsi:type="int" name="id" padding="6" unsigned="true" nullable="false" identity="true" comment="entity_id ID"/>
+        <column xsi:type="int" name="post_id" nullable="false"  comment="Post ID"/>
+        <column xsi:type="int" name="user_id" nullable="false"  comment="User ID"/>
+        <column xsi:type="varchar" name="customer_name" length="255"  comment="Customer Name"/>
+        <column xsi:type="varchar" name="customer_website" length="255"  comment="customer_website"/>
+        <column xsi:type="varchar" name="customer_email" length="255"  comment="customer_email"/>
+        <column xsi:type="varchar" name="comment" length="255"  comment="comment"/>
+        <column xsi:type="int"  name="status" default="0"  nullable="false"  comment="status"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false"  comment="Created At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    
+    <table name="wk_blogcustomer" resource="default" engine="innodb" comment="Blog Post Comment Table">
+        <column xsi:type="int" name="id" padding="6" unsigned="true" nullable="false" identity="true" comment="entity_id ID"/>
+        <column xsi:type="int" name="user_id" nullable="false"  comment="User ID"/>
+        <column xsi:type="int" name="customer_status" default="0"  nullable="false"  comment="customer_status"/>
+
+        <column xsi:type="timestamp" name="created_at" on_update="false"  comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+</schema>

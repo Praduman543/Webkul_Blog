@@ -1,0 +1,184 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_Blog
+ * @author      Webkul
+ * @copyright   Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+$customerId =$block-> getcustomerId();
+$path = $block->getUrl();
+$action = $path."wkblog/blog/index";
+$blogHelper = $block->getHelper();
+$limit = $blogHelper->getCharacterLimit();
+$isBlogger = $blogHelper->isCustomerBlogger();
+$isLoggedIn = $blogHelper->getCustomerLoginInfo();
+$collection = $block->getBlogCollection();
+$collectionSize = $collection->getSize(); ?>
+<style>
+.columns:after {
+    clear: inherit;
+}
+</style>
+
+<?php if ($isLoggedIn): ?>
+    <?php if ($isBlogger): ?>
+        <?php if ($collectionSize): ?>
+            <?php if ($customerId): ?>
+                <?php foreach ($collection as $blog): ?>
+                    <?php $name=$blog->getCustomerName(); ?>
+                <?php endforeach; ?>
+                <div class="container">
+                    <button
+                    onclick="location.href = '<?= /* @noEscape */  $block->escapeHtml($action) ?>';" 
+                    id="wk-blog-button" class="button" >
+                    <?= /* @noEscape */  $block->escapeHtml(__("Add New Post"));?></button>
+                    <h4 class='WK_textcolor wk-heading'><?= /* @noEscape */  $block->escapeHtml($name); ?></h4>
+                </div>
+                <div class = 'container'>
+                    <form 
+                        class="form-inline"  
+                        action="<?= /* @noEscape */  $block->escapeHtml($block->getUrl('wkblog/blog/viewallpost'))?>" 
+                        method="get">
+                            <input 
+                                type="text" 
+                                placeholder="Title" 
+                                name="title" 
+                                value ="<?=  /* @noEscape */ $block->getRequest()->getParam('title')?>">
+                            <button type="submit">Search</button>
+                    </form>
+                </div>   
+                <div class = 'container'>
+                   
+                  <?php foreach ($collection as $blog): ?>
+                        <div class='wk-blog-block'>
+                            <h2 class='WK_textcolor' style="margin-top:20px">
+                            <a 
+                                href='<?= /* @noEscape */($block->getUrl()); ?>wkblog/blog/title/blogid/<?= /* @noEscape */ ($blog->getId());?>'
+                                role='button' class='btn'>
+                                <div class='title'>
+                                                    <?= /* @noEscape */  $block->escapeHtml($blog->getSubject());?>
+                                </div>
+                            </a>
+                            </h2>
+                            <p class = 'post-meta tags' style='margin-top:20px;'>
+                                <span class='date'>
+                                    <?= /* @noEscape */ $block->escapeHtml($blog->getCreatedAt());  ?>
+                                </span>
+                                <a
+                                href='<?= /* @noEscape */ ($block->getUrl()); ?>wkblog/blog/user/userid/<?= /* @noEscape */ ($blog->getUserId());?>'
+                                role='button' class='btn'>
+                                    <span class='author'><?= /* @noEscape */  $block->escapeHtml($name);?> </span>
+                                </a>
+                                <?php if ($blog->getCategory() != ""): ?>
+                                    <?php if ($blog->getStatus() != 0): ?>
+                                <a href='<?= /* @noEscape */
+                                ($block->getUrl()); ?>wkblog/category/category/categoryid/<?= /* @noEscape */ ($blog->getCategoryId());?>'
+                                role='button' class='btn'>
+                                    <span class='cats'><?= /* @noEscape */ $block->escapeHtml($blog->getCategory()) ?></span>
+                                </a>        
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                <a href='<?= /* @noEscape */
+                                ($block->getUrl()); ?>wkblog/blog/index/blogid/<?= /* @noEscape */ ($blog->getId());?>'
+                                role='button' class='btn'>
+                                    <span class='edit'></span>
+                                </a>
+                                <span
+                                    class='delete' 
+                                    data-url="<?= /* @noEscape */ $block->getUrl('wkblog/blog/delete/', ['id'=>$block->escapeHtml($blog->getId()),
+                                    '_secure' => $block->escapeHtml($block->getRequest()->isSecure())]); ?>"
+                                >
+                                </span>
+                            </p>                
+                            <?php if (strlen($blog->getPreview()) > $limit): ?>
+                                <?php $content = substr($blog->getPreview(), 0, $limit)."..."; ?>
+                            <?php else: ?>
+                                <?php $content = $blog->getPreview(); ?>
+                            <?php endif; ?>
+                            <div class='WK_tbodyingedit_content'><?= /* @noEscape */ $content; ?></div>
+                            <p class='tags'>
+                                <span class='tag'>
+                                    <?php $tags = $blog->getTag();
+                                    $tagsArray = explode(',', $tags);
+                                   
+                                    ?>
+                                    <?php
+                                    if ($tagsArray[0] != null) {
+                                        $totalTag = count($tagsArray);
+                                    } else {
+                                        $totalTag = 1;
+                                    }
+                                    if ($totalTag > 0) {
+                                        $i = 1;
+                                        foreach ($tagsArray as $tag):
+                                            $seperator =  ''; ?>
+                                            <?php if ($tag != "") {?>
+                                                <?php
+                                                if ($totalTag != $i) {
+                                                    $seperator = ',';
+                                                }
+                                                ?>
+                                            <a href='<?= /* @noEscape */
+                                            $block->escapeHtml($block->getUrl()); ?>wkblog/blog/tag/tag/<?= /* @noEscape */  $block->escapeHtml($tag);?>'
+                                            role='button' class='btn'>
+                                            <span class='tag'>
+                                            <?= /* @noEscape */($tag);?><?= /* @noEscape */  $seperator;?> 
+                                            </span>
+                                            </a>
+                                                <?php
+                                            }
+                                            $i = $i +1; ?>
+                                        <?php endforeach;
+                                    } ?>
+                                </span>
+                            </p>
+                            <hr>
+                        </div>
+                    <?php endforeach ; ?>
+                    <div class='wk-pager'>
+                        <?php if ($block->getPagerHtml()): ?>
+                            <div 
+                            class="order-products-toolbar bottom">
+                                <?= /* @noEscape */ $block->getPagerHtml(); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class='wk-footer'>
+                        <div class="wk-buttons-set">
+                            <p class="wk-back-link">
+                                <a 
+                                class="wk-left" 
+                                onclick="javascript: window.history.back();" 
+                                href="javascript:;">« Back
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class='WK_textcolor'>
+                <?= /* @noEscape */  $block->escapeHtml(__('No Post Exist!')); ?>
+            </div>
+        <?php endif; ?>
+    <?php else: ?>
+        <div class='WK_textcolor'>
+            <?= /* @noEscape */  $block->escapeHtml(__('YOU ARE NOT SUBSCRIBE FOR BLOGS')); ?>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>
+<?php $optionElements = [
+        'delete'    => '.delete'
+    ];
+$serializedData = $block->getJsonHelper()->jsonEncode($optionElements); ?>
+<script type="text/x-magento-init">
+{
+"*":{
+        "deletePost":<?= /* @noEscape */ $serializedData; ?>
+    }
+}
+</script>    

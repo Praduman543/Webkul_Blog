@@ -1,0 +1,60 @@
+{
+    "wk_blog": {
+        "column": {
+            "id": true,
+            "category_id": true,
+            "user_id": true,
+            "customer_name": true,
+            "customer_email": true,
+            "subject": true,
+            "content": true,
+            "preview": true,
+            "metadescription": true,
+            "metakeywords": true,
+            "tag": true,
+            "blog_status": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "wk_category": {
+        "column": {
+            "id": true,
+            "category": true,
+            "status": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "wk_postcomment": {
+        "column": {
+            "id": true,
+            "post_id": true,
+            "user_id": true,
+            "customer_name": true,
+            "customer_website": true,
+            "customer_email": true,
+            "comment": true,
+            "status": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "wk_blogcustomer": {
+        "column": {
+            "id": true,
+            "user_id": true,
+            "customer_status": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

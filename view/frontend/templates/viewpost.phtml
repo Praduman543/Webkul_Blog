@@ -1,0 +1,171 @@
+ <?php
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_Blog
+ * @author      Webkul
+ * @copyright   Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+ $customerId = $block-> getcustomerId();
+ $limit = $block->getHelper()->getCharacterLimit();
+ $collection = $block->getBlogCollection();
+ $collectionSize = $collection->getSize(); ?>
+
+
+<div class='wk-big'>
+    <div class = 'container'>
+        <form 
+            class="form-inline"  
+            action="<?= /* @noEscape */  $block->escapeHtml($block->getUrl('wkblog/blog/viewpost/'))?>" 
+            method="get">
+
+                <input 
+                    type="text" 
+                    placeholder="Title" 
+                    name="title" 
+                    value ="<?=  /* @noEscape */ $block->getRequest()->getParam('title')?>">
+                <button type="submit"><?=  /* @noEscape */ __('Search')?></button>
+        </form>
+    </div> 
+    <div class='container'>
+        <div class="grid-row">
+            <?php if ($collectionSize) { ?>
+                <?php foreach ($collection as $blog) { ?>
+                    <div class='wk-blog-block grid-item'>
+                            <a 
+                            href='<?= /* @noEscape */ $block->escapeHtml($block->getUrl()); ?>wkblog/blog/title/blogid/
+                            <?= /* @noEscape */ $block->escapeHtml($blog->getId());?>' role='button' class='btn'>
+                            <img src="<?= /* @noEscape */  $block->getUrl("media/wysiwyg/blog/").$blog->getBlogPic();?>">
+                            </a>
+                        <h2 class='WK_textcolor'>
+                            <a 
+                            href='<?= /* @noEscape */ $block->escapeHtml($block->getUrl()); ?>wkblog/blog/title/blogid/
+                            <?= /* @noEscape */ $block->escapeHtml($blog->getId());?>'
+                            role='button' class='btn'>
+                                <div class='title'><?= /* @noEscape */  $block->escapeHtml($blog->getSubject());?></div>
+                            </a>
+                        </h2>
+                        <p class = 'post-meta tags'>
+                            <span class='date'><?= /* @noEscape */  $block->escapeHtml($blog->getCreatedAt()); ?></span>
+                            <a 
+                            href='<?= /* @noEscape */ ($block->getUrl()); ?>wkblog/blog/user/userid/<?= /* @noEscape */($blog->getUserId());?>'
+                            role='button' class='btn'>
+                            <span class='author'>
+                                <?= /* @noEscape */  $block->escapeHtml($blog->getCustomerName()); ?>
+                            </span>
+                            </a>
+                            <?php if ($blog->getCategory() != ""): ?>
+                                <?php if ($blog->getStatus() != 0): ?>
+                                <a 
+                                href='<?= /* @noEscape */ 
+                                ($block->getUrl()); ?>wkblog/category/category/categoryid/<?= /* @noEscape */ ($blog->getCategoryId());?>' 
+                                role='button' class='btn'>
+                                    <span class='cats'>
+                                        <?= /* @noEscape */  $block->escapeHtml($blog->getCategory())?>
+                                    </span>
+                                </a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </p>
+                        <?php if (strlen($blog->getContent()) > $limit): ?>
+                            <?php $content = substr(strip_tags($blog->getContent()), 0, $limit)."..."; ?>
+                        <?php else: ?>
+                            <?php $content = strip_tags($blog->getContent()); ?>
+                        <?php endif; ?>
+                        <?= /* @noEscape */  "<div class='WK_tbodyingedit_content body'>".$content."</div>"; ?>
+                        <p class='tags'>
+                            <span class='tag'>
+                                <?php $tags = $block->escapeHtml($blog->getTag());
+                                $tagsArray = explode(',', $tags);
+                                if (isset($tagsArray[1]) && $tagsArray[1] != null) {
+                                    $totalTag = count($tagsArray);
+                                } else {
+                                    $totalTag = 1;
+                                }
+                                $i = 1;
+                                ?>
+                                <?php
+                                if ($totalTag > 0) {
+                                    foreach ($tagsArray as $tag):
+                                        $seperator = '';
+                                        ?>
+                                        <?php if ($tag != ""):
+                                            if ($totalTag != $i) {
+                                                $seperator = ',';
+                                            } ?>
+                                        <a
+                                        href='<?= /* @noEscape */ ($block->getUrl()); ?>wkblog/blog/tag/tag/
+                                            <?= /* @noEscape */  $block->escapeHtml($tag);?>' role='button' class='btn'>
+                                            <span class='tag'>
+                                                <?= /* @noEscape */  $block->escapeHtml($tag);?>
+                                                <?= /* @noEscape */  $seperator;?>
+                                            </span>
+                                        </a>
+                                    <?php endif; ?>
+                                        <?php $i = $i +1;
+                            endforeach;
+                                }?>
+                            </span>
+                        </p>
+                    </div>
+                <?php } ?>
+            <?php } else { ?>
+                <?= /* @noEscape */  "<div class='WK_tbodyingedit_content'>No Post Exists!</div>"; ?>
+            <?php } ?>
+            <?php /*<?php  if ($block->getPagerHtml()): ?>
+                <div class="order-products-toolbar toolbar bottom col-md-6"><?= /* @noEscape */ /* $block->getPagerHtml(); ?></div>
+            <?php endif */?>
+            <!-- <div class='wk-footer col-md-6'>
+                <div class="buttons-set">
+                    <p class="back-link">
+                        <a class="left" onclick="javascript: window.history.back();" href="javascript:;">« Back</a>
+                    </p>
+                </div> 
+            </div> -->
+        </div>
+</div>
+<style>
+
+:root {
+  --primary: #efeada;
+  --secondary: lightblue;
+  --dark: #607d8b;
+  --light: #f7f7f7;
+  --shadow: 1px 0px 5px darkgray;
+}
+.grid-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 350px));
+  grid-gap: 15px 15px;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.grid-row .grid-item span {
+  padding: 10px;
+  line-height: 1;
+}
+.grid-row .grid-item h3 {
+  font-size: 20px;
+  margin-bottom: 0;
+}
+.grid-row .grid-item:hover {
+  filter: contrast(0.7);
+}
+.grid-row .grid-item {
+    transition: filter 0.5s ease;
+    cursor: pointer;
+    background: var(--light);
+    box-shadow: var(--shadow);
+    font-family: sans-serif;
+    align-items: stretch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+}
+
+</style>
